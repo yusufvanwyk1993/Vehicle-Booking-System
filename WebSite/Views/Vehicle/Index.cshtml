@@ -1,0 +1,74 @@
+﻿@using BookingSystem.Models
+@{
+    ViewData["Title"] = "Vehicles";
+    var vehicles = ViewData["Message"] as IEnumerable<Vehicle>;
+}
+
+<div style="width: 100%;">
+    <div style="width: 50%;float: left;">
+        <h1>Vehicles</h1>
+    </div>
+    <div style="margin-left: 50%;">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#maddvehiclemodel">
+            Add a vehicle
+        </button>
+        <!-- Modal -->
+        <div class="modal fade" id="maddvehiclemodel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add a Vehicle</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" asp-controller="Vehicle" id="formaddvehicle" asp-action="Insert">
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <div class="input-group flex-nowrap">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="addon-wrapping">Vehicle</span>
+                                    </div>
+                                    <input type="text" id="addvehiclemodel0" class="form-control" name="addvehiclemodel" placeholder="vehicle model" aria-label="vehicle model" aria-describedby="addon-wrapping">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-indigo" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Vehicle #</th>
+            <th scope="col">Model Name</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int row = 1;
+            foreach (var vehicle in @vehicles)
+            {
+                @Html.Raw("<th scope=\"row\">" + row + "</th>\r\n                    <td id=\"vehiclemodel" + row + "\">" + vehicle.vehiclemodel + "</td>\r\n                    <td>\r\n                        <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#editvehiclemodel" + row + "\" id=\"btneditvehicle" + row + "\" onclick=\"EditVehicle(this)\">\r\n                            Edit\r\n                        </button>\r\n                        <div class=\"modal fade\" id=\"editvehiclemodel" + row + "\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n                            <div class=\"modal-dialog\" role=\"document\">\r\n                                <div class=\"modal-content\">\r\n                                    <div class=\"modal-header\">\r\n                                        <h5 class=\"modal-title\" id=\"editvehicledetails" + row + "\">Edit Vehicle details</h5>\r\n                                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                                            <span aria-hidden=\"true\">&times;</span>\r\n                                        </button>\r\n                                    </div>\r\n                                    <form method=\"post\" id=\"formeditvehicle\" action=\"/Vehicle/Edit\">\r\n                                        <div class=\"modal-body\">\r\n                                            <input type=\"hidden\" class=\"form-control\" id=\"editvehicleid" + row + "\" name=\"editvehicleid\" value=\"" + vehicle.id + "\" aria-describedby=\"addon-wrapping\">\r\n                                            <div class=\"input-group flex-nowrap\">\r\n                                                <div class=\"input-group-prepend\">\r\n                                                    <span class=\"input-group-text\" id=\"addon-wrapping\">Vehicle</span>\r\n                                                </div>\r\n                                                <input type=\"text\" id=\"editvehiclemodelname" + row + "\" class=\"form-control\" name=\"editvehiclemodelname\" placeholder=\"vehicle model\" aria-label=\"vehicle model\" aria-describedby=\"addon-wrapping\">\r\n                                            </div>\r\n                                        </div>\r\n                                        <div class=\"modal-footer\">\r\n                                            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Cancel</button>\r\n                                            <button class=\"btn btn-indigo\" type=\"submit\">Submit</button>\r\n                                        </div>\r\n                                    </form>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n\r\n                        <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" id=\"deletevehicle" + row + "\" data-target=\"#deletevehiclemodel" + row + "\">\r\n                            Delete\r\n                        </button>\r\n\r\n                        <div class=\"modal fade\" id=\"deletevehiclemodel" + row + "\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n                            <div class=\"modal-dialog\" role=\"document\">\r\n                                <div class=\"modal-content\">\r\n                                    <div class=\"modal-header\">\r\n                                        <h5 class=\"modal-title\" id=\"exampleModalLabel\">Delete Vehicle</h5>\r\n                                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                                            <span aria-hidden=\"true\">&times;</span>\r\n                                        </button>\r\n                                    </div>\r\n                                    <form method=\"post\" id=\"formdeletevehicle\" action=\"/Vehicle/Delete\">\r\n                                        <div class=\"modal-body\">\r\n                                            <input type=\"hidden\" class=\"form-control\" id=\"deletevehicleid" + row + "\" name=\"deletevehicleid\" value=\"" + vehicle.id + "\" aria-describedby=\"addon-wrapping\">\r\n                                            Are you sure you want to delete this vehicle?\r\n                                        </div>\r\n                                        <div class=\"modal-footer\">\r\n                                            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">No</button>\r\n                                            <button class=\"btn btn-indigo\" type=\"submit\">Yes</button>\r\n                                        </div>\r\n                                    </form>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </td>\r\n                </tr>");
+                row = row + 1;
+            }
+        }
+    </tbody>
+</table>
+<script>
+
+
+    function EditVehicle(btn) {
+        console.log(btn.id);
+        var idnum = btn.id.replace("btneditvehicle", "");
+        document.getElementById("editvehiclemodelname" + idnum).value = document.getElementById("vehiclemodel" + idnum).innerHTML;
+    }
+</script>

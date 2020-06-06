@@ -1,0 +1,118 @@
+﻿@using BookingSystem.Models
+@{
+    ViewData["Title"] = "Bookings";
+    var clients = ViewData["Clients"] as IEnumerable<Client>;
+    var vehicles = ViewData["Vehicles"] as IEnumerable<Vehicle>;
+    var bookings = ViewData["Bookings"] as IEnumerable<VehicleBooking>;
+}
+<h1>Vehicle Bookings</h1>
+
+<div style="width: 100%;">
+    <div style="width: 50%;float: left;">
+        <div class="form-group row">
+            <label for="example-date-input" class="col-2 col-form-label">Filter by date</label>
+            <div class="col-10">
+                <input class="form-control datepicker" type="date">
+            </div>
+        </div>
+    </div>
+    <div style="margin-left: 50%;">
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Book a vehicle
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Book a vehicle</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" asp-controller="Bookings" id="formaddclient" asp-action="Insert">
+
+                        <div class="modal-body">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Client</label>
+                                </div>
+                                <select class="custom-select" id="selectclient" name="addclientid">
+                                    <option selected>Choose...</option>
+                                    @{
+                                        foreach (var client in @clients)
+                                        {
+                                            @Html.Raw("<option value=\"" + client.id + "\">" + client.firstname + "</option>");
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="inputGroupSelect01">Vehicle</label>
+                                </div>
+                                <select class="custom-select" id="selectvehicle" name="addvehicleid">
+                                    <option selected>Choose...</option>
+                                    @{
+                                        foreach (var vehicle in @vehicles)
+                                        {
+                                            @Html.Raw("<option value=\"" + vehicle.id + "\">" + vehicle.vehiclemodel + "</option>");
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group row">
+                                <label for="example-date-input" class="col-2 col-form-label">Date</label>
+                                <div class="col-10">
+                                    <input class="form-control datepicker" id="addbookingfor" name="addbookingfor" type="date">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Notes</span>
+                                </div>
+                                <textarea class="form-control" aria-label="With textarea" id="addnotes" name="addnotes"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-indigo" type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Booking #</th>
+            <th scope="col">Client First Name</th>
+            <th scope="col">Vehicle Model</th>
+            <th scope="col">Booked For</th>
+            <th scope="col">Notes</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int row = 1;
+            foreach (var booking in @bookings)
+            {
+                @Html.Raw("<th scope=\"row\">" + row + "</th>\r\n                    <td id=\"bookingrow" + row + "\">" + booking.clientfirstname + "</td>\r\n          <td id=\"bookingrowvehicle" + row + "\">" + booking.vehiclemodel + "</td>\r\n   <td id=\"bookingrowbookfor" + row + "\">" + booking.bookedfor + "</td>\r\n    <td id=\"bookingrownotes" + row + "\">" + booking.notes + "</td>\r\n      <td>\r\n                        <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#editbookingsmodel" + row + "\" id=\"btneditbooking" + row + "\" onclick=\"EditBooking(this)\">\r\n                            Edit\r\n                        </button>\r\n                        <div class=\"modal fade\" id=\"editbookingsmodel" + row + "\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n                            <div class=\"modal-dialog\" role=\"document\">\r\n                                <div class=\"modal-content\">\r\n                                    <div class=\"modal-header\">\r\n                                        <h5 class=\"modal-title\" id=\"editbookingdetails" + row + "\">Edit Booking details</h5>\r\n                                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                                            <span aria-hidden=\"true\">&times;</span>\r\n                                        </button>\r\n                                    </div>\r\n                                    <form method=\"post\" id=\"formeditbookings\" action=\"/Bookings/Edit\">\r\n                                        <div class=\"modal-body\">\r\n                                            <input type=\"hidden\" class=\"form-control\" id=\"editbookingid" + row + "\" name=\"editbookingid\" value=\"" + booking.id + "\" aria-describedby=\"addon-wrapping\">\r\n                                            <div class=\"input-group flex-nowrap\">\r\n                                                <div class=\"input-group-prepend\">\r\n                                                    <span class=\"input-group-text\" id=\"addon-wrapping\">Booking</span>\r\n                                                </div>\r\n                                                <input type=\"text\" id=\"editbookingfirstname" + row + "\" class=\"form-control\" name=\"editbookingfirstname\" placeholder=\"first name\" aria-label=\"first name\" aria-describedby=\"addon-wrapping\">\r\n                                            </div>\r\n                                        </div>\r\n                                        <div class=\"modal-footer\">\r\n                                            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Cancel</button>\r\n                                            <button class=\"btn btn-indigo\" type=\"submit\">Submit</button>\r\n                                        </div>\r\n                                    </form>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n\r\n                        <button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" id=\"deletecbooking" + row + "\" data-target=\"#deletebookingsmodel" + row + "\">\r\n                            Delete\r\n                        </button>\r\n\r\n                        <div class=\"modal fade\" id=\"deletebookingsmodel" + row + "\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"exampleModalLabel\" aria-hidden=\"true\">\r\n                            <div class=\"modal-dialog\" role=\"document\">\r\n                                <div class=\"modal-content\">\r\n                                    <div class=\"modal-header\">\r\n                                        <h5 class=\"modal-title\" id=\"exampleModalLabel\">Delete Booking</h5>\r\n                                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">\r\n                                            <span aria-hidden=\"true\">&times;</span>\r\n                                        </button>\r\n                                    </div>\r\n                                    <form method=\"post\" id=\"formdeletebooking\" action=\"/Bookings/Delete\">\r\n                                        <div class=\"modal-body\">\r\n                                            <input type=\"hidden\" class=\"form-control\" id=\"deletebookingid" + row + "\" name=\"deletebookingid\" value=\"" + booking.id + "\" aria-describedby=\"addon-wrapping\">\r\n                                            Are you sure you want to delete this booking?\r\n                                        </div>\r\n                                        <div class=\"modal-footer\">\r\n                                            <button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">No</button>\r\n                                            <button class=\"btn btn-indigo\" type=\"submit\">Yes</button>\r\n                                        </div>\r\n                                    </form>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                    </td>\r\n                </tr>");
+                row = row + 1;
+            }
+        }
+    </tbody>
+</table>
+<script>
+    function EditBooking(btn) {
+        console.log(btn.id);
+        var idnum = btn.id.replace("btneditbooking", "");
+        document.getElementById("editbookingfirstname" + idnum).value = document.getElementById("bookingrow" + idnum).innerHTML;
+    }
+</script>
