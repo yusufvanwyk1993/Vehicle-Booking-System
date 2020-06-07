@@ -15,7 +15,8 @@ How to use vehicle booking system:
 
 
 Database script:
---Create new database
+```
+Create new database
 CREATE DATABASE "VehicleBookingDB"
     WITH 
     OWNER = postgres
@@ -160,3 +161,4 @@ AS $BODY$
 		SET vehiclemodel = _vehiclemodel
 		WHERE id = _vehicleid;
 $BODY$;
+```
