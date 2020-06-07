@@ -16,7 +16,7 @@ How to use vehicle booking system:
 
 Database script:
 ```
-Create new database
+--Create new database
 CREATE DATABASE "VehicleBookingDB"
     WITH 
     OWNER = postgres
