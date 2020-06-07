@@ -8,12 +8,21 @@ using Microsoft.Extensions.Configuration;
 
 namespace WebSite.Controllers
 {
+    /// <summary>
+    /// Bookings Controller meant to handle vehicle bookings requests 
+    /// </summary>
     public class BookingsController : Controller
     {
+        /// <summary>
+        /// Setting up variables and connectionstrings that comes from the appsettings.json file
+        /// </summary>
         IConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
         IConfiguration configuration;
         const string appsettingsjsonfile = "AppSettings.json";
         DataAccess da;
+        /// <summary>
+        /// Setup connection to testVMGDB database
+        /// </summary>
         public BookingsController()
         {
             configurationBuilder.AddJsonFile(appsettingsjsonfile);
@@ -25,6 +34,12 @@ namespace WebSite.Controllers
                .GetConnectionString(this.configuration, "testVMGDB");
             da = new DataAccess(conString);
         }
+        /// <summary>
+        /// If a date is specified, only bookings based on that date will be returned
+        /// Else the full list of bookings will be returned
+        /// </summary>
+        /// <param name="filterbydate"></param>
+        /// <returns></returns>
         public IActionResult Index(string filterbydate)
         {
             if (string.IsNullOrEmpty(filterbydate) | string.IsNullOrWhiteSpace(filterbydate))
@@ -52,6 +67,14 @@ namespace WebSite.Controllers
             }
             
         }
+        /// <summary>
+        /// Allows user to handle request for inserting a new vehicle booking
+        /// </summary>
+        /// <param name="addclientid"></param>
+        /// <param name="addvehicleid"></param>
+        /// <param name="addbookingfor"></param>
+        /// <param name="addnotes"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Insert(string addclientid, string addvehicleid, string addbookingfor,string addnotes)
         {
             var parsedDate = DateTime.ParseExact(addbookingfor, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
@@ -60,6 +83,11 @@ namespace WebSite.Controllers
             RedirectToActionResult redirectResult = new RedirectToActionResult("Index", "Bookings", null);
             return redirectResult;
         }
+        /// <summary>
+        /// Allows user to handle request for deleting a booking
+        /// </summary>
+        /// <param name="deletebookingid"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Delete(string deletebookingid)
         {
             await da.BookingsDelete(int.Parse(deletebookingid));

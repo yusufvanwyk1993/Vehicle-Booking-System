@@ -1,7 +1,9 @@
 ﻿@using BookingSystem.Models
 @{
     ViewData["Title"] = "Vehicles";
-    var vehicles = ViewData["Message"] as IEnumerable<Vehicle>;
+    var vehicles = ViewData["Vehicles"] as IEnumerable<Vehicle>;
+    var message = ViewData["message"].ToString();
+
 }
 
 <div style="width: 100%;">
@@ -64,11 +66,8 @@
     </tbody>
 </table>
 <script>
-
-
-    function EditVehicle(btn) {
-        console.log(btn.id);
-        var idnum = btn.id.replace("btneditvehicle", "");
-        document.getElementById("editvehiclemodelname" + idnum).value = document.getElementById("vehiclemodel" + idnum).innerHTML;
+    var message = '@message';
+    if (message) {
+            alert(message);
     }
 </script>

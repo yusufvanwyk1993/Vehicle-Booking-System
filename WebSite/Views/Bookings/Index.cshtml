@@ -74,7 +74,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Notes</span>
                         </div>
-                        <textarea class="form-control" aria-label="With textarea" id="addnotes" name="addnotes"></textarea>
+                        <textarea class="form-control"  maxlength="25" aria-label="With textarea" id="addnotes" name="addnotes"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -107,10 +107,3 @@
         }
     </tbody>
 </table>
-<script>
-    function EditBooking(btn) {
-        console.log(btn.id);
-        var idnum = btn.id.replace("btneditbooking", "");
-        document.getElementById("editbookingfirstname" + idnum).value = document.getElementById("bookingrow" + idnum).innerHTML;
-    }
-</script>

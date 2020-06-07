@@ -9,6 +9,9 @@ using WebSite.Models;
 
 namespace WebSite.Controllers
 {
+    /// <summary>
+    /// Basic controller
+    /// </summary>
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

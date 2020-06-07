@@ -74,12 +74,20 @@ namespace BookingSystem.Database
         /// <returns></returns>
         public async Task<bool> ClientDelete(int id)
         {
-            using (var connection = new NpgsqlConnection(connectionstring))
+            try
             {
-                connection.Open();
-                var result = await connection.ExecuteAsync($"Call clientdelete({id.ToString()})");
-                return true;
+                using (var connection = new NpgsqlConnection(connectionstring))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync($"Call clientdelete({id.ToString()})");
+                    return true;
+                }
             }
+            catch (Exception e)
+            {
+                return false;
+            }
+
         }
         #endregion
 
@@ -133,12 +141,21 @@ namespace BookingSystem.Database
         /// <returns></returns>
         public async Task<bool> VehicleDelete(int id)
         {
-            using (var connection = new NpgsqlConnection(connectionstring))
+            try
             {
-                connection.Open();
-                var result = await connection.ExecuteAsync($"Call vehicledelete({id.ToString()})");
-                return true;
+                using (var connection = new NpgsqlConnection(connectionstring))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync($"Call vehicledelete({id.ToString()})");
+                    return true;
+                }
             }
+            catch (Exception)
+            {
+
+                return false;
+            }
+          
         }
         #endregion
 
@@ -188,12 +205,21 @@ namespace BookingSystem.Database
         /// <returns></returns>
         public async Task<bool> BookingsDelete(int id)
         {
-            using (var connection = new NpgsqlConnection(connectionstring))
+            try
             {
-                connection.Open();
-                var result = await connection.ExecuteAsync($"Call bookingdelete({id.ToString()})");
-                return true;
+                using (var connection = new NpgsqlConnection(connectionstring))
+                {
+                    connection.Open();
+                    var result = await connection.ExecuteAsync($"Call bookingdelete({id.ToString()})");
+                    return true;
+                }
             }
+            catch (Exception)
+            {
+
+                return false;
+            }
+           
         }
         #endregion
 
