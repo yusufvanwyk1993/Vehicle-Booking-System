@@ -25,15 +25,32 @@ namespace WebSite.Controllers
                .GetConnectionString(this.configuration, "testVMGDB");
             da = new DataAccess(conString);
         }
-        public IActionResult Index()
+        public IActionResult Index(string filterbydate)
         {
-            var bookings = da.BookingsGetList().Result;
-            var clients = da.ClientGetList().Result;
-            var vehicles = da.VehicleGetList().Result;
-            ViewData["Clients"] = clients;
-            ViewData["Vehicles"] = vehicles;
-            ViewData["Bookings"] = bookings;
-            return View();
+            if (string.IsNullOrEmpty(filterbydate) | string.IsNullOrWhiteSpace(filterbydate))
+            {
+                var bookings = da.BookingsGetList().Result;
+                var clients = da.ClientGetList().Result;
+                var vehicles = da.VehicleGetList().Result;
+                ViewData["Clients"] = clients;
+                ViewData["Vehicles"] = vehicles;
+                ViewData["Bookings"] = bookings;
+                return View();
+            }
+            else
+            {
+                var parsedDate = DateTime.ParseExact(filterbydate, "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+                var formattedDate = parsedDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+
+                var bookings = da.BookingsGetList(formattedDate).Result;
+                var clients = da.ClientGetList().Result;
+                var vehicles = da.VehicleGetList().Result;
+                ViewData["Clients"] = clients;
+                ViewData["Vehicles"] = vehicles;
+                ViewData["Bookings"] = bookings;
+                return View();
+            }
+            
         }
         public async Task<IActionResult> Insert(string addclientid, string addvehicleid, string addbookingfor,string addnotes)
         {
@@ -43,15 +60,9 @@ namespace WebSite.Controllers
             RedirectToActionResult redirectResult = new RedirectToActionResult("Index", "Bookings", null);
             return redirectResult;
         }
-        public async Task<IActionResult> Edit(string editid,string editclientid, string editvehicleid, string editbookingfor, string editnotes)
-        {
-            await da.BookingsUpdate(int.Parse(editid), int.Parse(editclientid), int.Parse(editvehicleid), editbookingfor, editnotes);
-            RedirectToActionResult redirectResult = new RedirectToActionResult("Index", "Bookings", null);
-            return redirectResult;
-        }
         public async Task<IActionResult> Delete(string deletebookingid)
         {
-            await da.VehicleDelete(int.Parse(deletebookingid));
+            await da.BookingsDelete(int.Parse(deletebookingid));
             RedirectToActionResult redirectResult = new RedirectToActionResult("Index", "Bookings", null);
             return redirectResult;
         }

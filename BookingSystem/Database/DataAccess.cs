@@ -156,6 +156,15 @@ namespace BookingSystem.Database
                 return vehiclebookings;
             }
         }
+        public async Task<IEnumerable<VehicleBooking>> BookingsGetList(string bookingdate)
+        {
+            using (var connection = new NpgsqlConnection(connectionstring))
+            {
+                connection.Open();
+                var vehiclebookings = await connection.QueryAsync<VehicleBooking>($"SET datestyle = dmy;select b.id, b.clientid, c.firstname as clientfirstname, b.vehicleid, v.vehiclemodel, b.bookedfor, b.notes from Bookings b inner join Client c on b.clientid = c.id inner join Vehicle v on b.vehicleid = v.id where b.bookedfor = '{bookingdate}'::date");
+                return vehiclebookings;
+            }
+        }
         /// <summary>
         /// Allows user to book a vehicle by providing client, vehicle and notes if any
         /// </summary>
@@ -169,23 +178,6 @@ namespace BookingSystem.Database
             {
                 connection.Open();
                 var result = await connection.ExecuteAsync($"Call bookinginsert({clientid},{vehicleid},'{bookingfor}','{notes}')");
-                return true;
-            }
-        }
-        /// <summary>
-        /// Allows user to update a specific booking by providing booking id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="clientid"></param>
-        /// <param name="vehicleid"></param>
-        /// <param name="notes"></param>
-        /// <returns></returns>
-        public async Task<bool> BookingsUpdate(int id, int clientid, int vehicleid, string bookingfor, string notes)
-        {
-            using (var connection = new NpgsqlConnection(connectionstring))
-            {
-                connection.Open();
-                var result = await connection.ExecuteAsync($"Call bookingupdate({id},{clientid},{vehicleid},{bookingfor},'{notes}')");
                 return true;
             }
         }
